@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Danilo Cândido Vieira; Marco Colossi Brustolin; Fabio Cop; Gustavo Fonseca." />
+
+<meta name="date" content="2018-06-22" />
+
+<title>segRDA vignette</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">segRDA vignette</h1>
+<h4 class="author">Danilo Cândido Vieira; Marco Colossi Brustolin; Fabio Cop; Gustavo Fonseca.</h4>
+<h4 class="date">June 22, 2018</h4>
+
+
+
+<p><code>segRDA</code> is designed to model non-continuous linear responses of ecological communities to environmental data. This tutorial assumes familiarity both with R and with community ordination. The package <code>segRDA</code> is available on CRAN or the latest development version can be installed from GitHub using the package <code>devtools</code> : <a href="https://github.com/DaniloCVieira/segRDA" class="uri">https://github.com/DaniloCVieira/segRDA</a>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># to install the package via CRAN</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">&quot;segRDA&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># to install the package via GitHub</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;DaniloCVieira/segRDA&quot;</span>)</a></code></pre></div>
+<p>The modeling process with <code>segRDA</code> is straightforward through three steps: <strong>(1) data ordering</strong> (function <code>OrdData</code>), <strong>(2) split-moving-window analysis</strong> (function <code>SMW</code>) and <strong>(3) piecewise redundancy analysis</strong> (function <code>pwRDA</code>). <code>segRDA</code> provides simualted and empirical datasets to facilitate reproducible examples. Each of these dataset is a list composed of two matrices: <code>envi</code> and <code>comm</code>. Through the following example code we will use the dataset <code>sim1</code> from the package. At the end of this document, we present the key running procedures for the empirical dataset <code>nema</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span>(sim1) <span class="co">##Simulated data</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">x&lt;-sim1<span class="op">$</span>envi <span class="co">## matrix of explanatory variables</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">y&lt;-sim1<span class="op">$</span>comm <span class="co">## matrix of response variables</span></a></code></pre></div>
+<div id="data-ordering" class="section level1">
+<h1>Data ordering</h1>
+<p>Both the SMW and pwRDA analyses depend on ordered datasets. The ordering can be user-defined or generated using <code>OrdData</code> function. The latter is a wrapper for (1) performing a redundancy analysis using the <code>rda</code> function from <code>vegan</code> package and (2) ordering both response and explanatory matrices using one of the axes of the RDA model. Defaults to use the first RDA axis. The function also allows the user to transform community data prior to RDA analysis. The transformation is specified by the argument <code>method</code>, which is further passed to the <code>decostand</code> function from <code>vegan</code>. Additional arguments from <code>rda</code> and <code>decostand</code> can be passed directly to the <code>OrdData</code> function.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">sim1o&lt;-<span class="kw">OrdData</span>(<span class="dt">x=</span>x,<span class="dt">y=</span>y, <span class="dt">axis=</span><span class="dv">1</span>, <span class="dt">method=</span><span class="st">&quot;hellinger&quot;</span>)</a></code></pre></div>
+<p><code>OrdData</code> returns an object of class <code>ord</code>, which is a list consisting of:</p>
+<ul>
+<li><code>..$xo</code>: the ordered explanatory matrix;</li>
+<li><code>..$yo</code>: the ordered community matrix (untransformed);</li>
+<li><code>..$x</code>: the original explanatory matrix;</li>
+<li><code>..$y</code>: the original community matrix;</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">xo&lt;-sim1o<span class="op">$</span>xo <span class="co">## ordered explanatory matrix.</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">yo&lt;-sim1o<span class="op">$</span>yo <span class="co">## ordered community matrix (untransformed).</span></a></code></pre></div>
+<p>The resulting ordered community can be represented by a species-site interaction matrix using the function <code>image</code>, which is available from the stats package of R.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">mgp =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>), <span class="dt">cex =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">image</span>(y, <span class="dt">main =</span> <span class="st">&quot;Original community data&quot;</span>, <span class="dt">col =</span> <span class="kw">topo.colors</span>(<span class="dv">100</span>), <span class="dt">axes =</span> F, </a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">    <span class="dt">xlab =</span> <span class="st">&quot;Sites&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Species abundance&quot;</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">image</span>(yo, <span class="dt">main =</span> <span class="st">&quot;Ordered comunity data&quot;</span>, <span class="dt">col =</span> <span class="kw">topo.colors</span>(<span class="dv">100</span>), <span class="dt">axes =</span> F, </a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">    <span class="dt">xlab =</span> <span class="st">&quot;Sites&quot;</span>, <span class="dt">ylab =</span> <span class="st">&quot;Species abundance&quot;</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="split-moving-window-analysis" class="section level1">
+<h1>Split-moving window analysis</h1>
+<div id="a-brief-overview-of-the-smw-analysis." class="section level2">
+<h2>A brief overview of the SMW analysis.</h2>
+<p>The application of SMW applied to a species matrix allows consists of (1) placing a window of even-numbered size at the beginning of the data series, (2) splitting the window into two equal halves, (3) calculating the community centroids within each half, (4) computing a dissimilarity metric between the two halves, (5) shifting window one position along the series, and (6) repeating the procedure till the end of the data series (Cornelius &amp; Reynolds 1991). The significance of the dissimilarity values within each window is tested through multi-response permutations and includes two types of procedures: the <strong>“random-plot”</strong> and <strong>“random-shift”</strong>. The first randomizes sites along the series while preserving species composition and abundance structure of the sites. The second randomizes patterns of each species relative to each other while preserving the spatial structure of the species abundance. Therefore, choosing between random plot and random shift relies on considering sites or species as a fixed aspect of the null distribution. Both procedures include computing an expected mean dissimilarity (DS) and standard deviation (SD) for each window midpoint. Confidence limits have been suggested as one or two SD above DS or estimated from one-tailed 95% confidence intervals (Erdos et al. 2014).</p>
+<p>The choice of window size affects the results of the SMW analysis. A <em>pooled</em> profile by averaging together dissimilarities from different window sizes reduces the scale-effect. In this case, dissimilarity profiles of the mean Z-score (standardized values of dissimilarity) are used to detect the community breakpoints.</p>
+<p>In plot randomization, Z-scores increase at each window midpoint together with an increase in window width, but the general shape of the dissimilarity profiles remains unchanged. In contrast, the random-shift method minimizes the scale dependence of Z-scores and makes a clear distinction between non-significant and significant discontinuities (Körmöczi et al. 2016).</p>
+</div>
+<div id="the-function-smw" class="section level2">
+<h2>The function SMW</h2>
+<p>The package <code>segRDA</code> implements the SMW analysis through the function <code>SMW</code> which requires the following arguments:</p>
+<ul>
+<li><code>yo</code>: the ordered community;</li>
+<li><code>ws</code>: either a single window size or a vector of several windows sizes;</li>
+<li><code>dist</code>: the distance metric (all distances metrics available in <code>vegan::vegdist</code>);</li>
+<li><code>rand</code>: the randomization type (<code>&quot;shift&quot;</code> or <code>&quot;plot&quot;</code>);</li>
+<li><code>n.rand</code>: the number of randomizations;</li>
+</ul>
+<p>The default settings are <code>dist=&quot;bray&quot;</code>, <code>rand=&quot;shift&quot;</code> and <code>n.rand=99</code>. The running time of the analysis will depend on the number of window sizes (<code>length(ws)</code>) multiplied by the number of randomizations <code>n.rand</code>. In the following examples, we settled a low number of randomizations to speed up the analyses with the remaining arguments left at their default values.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">ws20&lt;-<span class="kw">SMW</span>(<span class="dt">yo=</span>yo,<span class="dt">ws=</span><span class="dv">20</span>, <span class="dt">n.rand=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">## </span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">##  SMW analysis (1/1); w =20</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">pool&lt;-<span class="kw">SMW</span>(<span class="dt">y=</span>yo,<span class="dt">ws=</span><span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">30</span>,<span class="dv">40</span>), <span class="dt">n.rand=</span><span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">## </span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">##  SMW analysis (1/4); w =10</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">## </span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">##  SMW analysis (2/4); w =20</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">## </span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">##  SMW analysis (3/4); w =30</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">## </span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">##  SMW analysis (4/4); w =40</span></a></code></pre></div>
+<p><code>SMW</code> returns invisibly an <code>smw</code> object, which is a two-level list object describing the SMW results for each window <code>w</code> analyzed. Each of the <code>w</code> slots is a list containing the following results:</p>
+<ul>
+<li><code>..$dp</code>: The raw dissimilarity profile table (DP): a data frame giving the positions, labels, values of dissimilarity and z-scores for each sample;</li>
+<li><code>..$rdp</code>: data frame containing the randomized DP;</li>
+<li><code>..$md</code>: mean dissimilarity of the randomized DP;</li>
+<li><code>..$sd</code>: standard deviation for each sample position;</li>
+<li><code>..$oem</code>: overall expected mean dissimilarity;</li>
+<li><code>..$osd</code>: average standard deviation for the dissimilarities;</li>
+<li><code>..$params</code>: list with input arguments.</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">class</span>(ws20)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">## [1] &quot;smw&quot;</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">length</span>(ws20)</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">## [1] 1</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">names</span>(ws20)</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">## [1] &quot;w20&quot;</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw">class</span>(pool)</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">## [1] &quot;smw&quot;</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="kw">length</span>(pool)</a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">## [1] 4</span></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="kw">names</span>(pool)</a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co">## [1] &quot;w10&quot; &quot;w20&quot; &quot;w30&quot; &quot;w40&quot;</span></a></code></pre></div>
+</div>
+<div id="methods-for-extracting-and-plotting-the-smw-results" class="section level2">
+<h2>Methods for extracting and plotting the SMW results</h2>
+<div id="extract" class="section level3">
+<h3><code>extract</code></h3>
+<p>The function <code>extract</code> allows the user to access the results cointained in a <code>smw</code> object. The argument <code>index</code> specifies which of the results described above will be extracted. By default, <code>extract</code> returns an object of class <code>dp</code>: a DP table containing significant discontinuities and suggested breakpoints. Extracting a <code>dp</code> object implements the following auxiliary arguments:</p>
+<ul>
+<li><code>sig</code>: defines the statistical test used to detect significant discontinuities. The statistical tests available are <code>&quot;z&quot;</code>,<code>&quot;sd&quot;</code>,<code>&quot;sd2&quot;</code>, and <code>&quot;tail1&quot;</code>;</li>
+<li><code>z</code>: sets the critical value valor for z-scores when <code>sig=&quot;z&quot;</code>;</li>
+<li><code>BPs</code>: defines if the breakpoints should be chosen as those site positions corresponding to the maximum dissimilarity in a sequence of significant dissimilarity values (<code>BPs=&quot;max&quot;</code>) or as those site positions corresponding to the median position of the sequence (<code>BPs=&quot;median&quot;</code>). If <code>NULL</code> the breakpoints are not computed;</li>
+<li><code>seq.sig</code>: specifies the length of a sequence of significant dissimilarity values that will be considered in defining the community breakpoints.</li>
+</ul>
+<p>The default settings are <code>index=&quot;dp&quot;</code>, <code>sig=&quot;z&quot;</code>, <code>z=&quot;1.85&quot;</code>, <code>BPs=&quot;max&quot;</code> and <code>seq.sig=3</code>. The returned <code>dp</code> object has its own generic <code>print</code> method, <code>print.dp</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">ws20_dp&lt;-<span class="kw">extract</span>(ws20) </a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="co">## Selected index: 'dp'</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">## 1 window size(s) available in 'smw': 20</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="co">## Window size selected: 20</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="co">## Number of breakpoints detected: 1</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="co">## Breakpoint positions:  53</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7">ws20_dp[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,]</a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="co">##   positions sampleID       diss    zscore sig:z bp</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co">## 1        10       69 0.05193119 -3.953151    ns  -</span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="co">## 2        11       59 0.06068431 -3.611930    ns  -</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="co">## 3        12       22 0.06054280 -3.617446    ns  -</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co">## 4        13       32 0.07503193 -3.052619    ns  -</span></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="co">## 5        14       78 0.07462687 -3.068409    ns  -</span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="co">## 6        15       18 0.08993373 -2.471704    ns  -</span></a></code></pre></div>
+<p>When the <code>smw</code> object handles multiple window sizes (hereafter referred to as <em>pooled</em> <code>smw</code> objects), the extracted DP table will contain the z-scores averaged over the set of window sizes.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">pool_dp&lt;-<span class="kw">extract</span>(pool) </a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">## Selected index: 'dp'</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">## Window sizes averaged: 10, 20, 30, 40</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">## Number of breakpoints detected: 1</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="co">## Breakpoint positions:  51</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="kw">head</span>(pool_dp)</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="co">##   positions SiteID Average_diss Average_z sig:Z bp</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="co">## 1         5     39   0.03703704 -4.927905    ns  -</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="co">## 2         6     49   0.05778070 -4.371110    ns  -</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="co">## 3         7     79   0.05619454 -4.413685    ns  -</span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co">## 4         8     62   0.04204993 -4.793350    ns  -</span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="co">## 5         9     88   0.03849951 -4.888649    ns  -</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">## 6        10     69   0.04015701 -4.626781    ns  -</span></a></code></pre></div>
+<p>A specific DP can be extracted from <em>pooled</em> objects by specifying a target window size (argument <code>w</code>).</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">ws10_dp&lt;-<span class="kw">extract</span>(pool, <span class="dt">w=</span><span class="dv">10</span>) </a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">## Selected index: 'dp'</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">## 4 window size(s) available in 'smw': 10, 20, 30, 40</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">## Window size selected: 10</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">## DP without any significant dissimilarity value: no breakpoint could be determined.</span></a></code></pre></div>
+<p>The length of consecutive, significant dissimilarity values (argument <code>seq.sig</code>) is used as criteria for defining breakpoints. The function will display a warning if <code>seq.sig</code> exceeds the maximum threshold:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">ws20_dp&lt;-<span class="kw">extract</span>(ws20, <span class="dt">sig=</span><span class="st">&quot;tail1&quot;</span>, <span class="dt">seq.sig=</span><span class="dv">20</span>)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">## Selected index: 'dp'</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">## 1 window size(s) available in 'smw': 20</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="co">## Window size selected: 20</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="co">## Warning: DP shows '18' significant dissimilarity values but no breakpoint could be determined for </span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co">##  'seq.sig=20' </span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co">##  </span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="co">## Summary stats of consecutive, significant dissimilarity values for detecting breakpoints in 'smw': </span></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="co">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="co">##      18      18      18      18      18      18</span></a></code></pre></div>
+<p>The function <code>bp</code> is an auxiliary tool for displaying the breakpoints positions in objects of class <code>dp</code> (if present):</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">bp</span>(ws10_dp)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co">## numeric(0)</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="kw">bp</span>(pool_dp)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">## [1] 51</span></a></code></pre></div>
+<p>Note that all other results contained in <code>smw</code> objects (i.e. <code>rdp</code>, <code>md</code>, <code>sd</code>, <code>oem</code>, <code>osd</code> and <code>params</code> ) comprise results of single window sizes. Thus, the argument <code>w</code> must be specified to access them from <em>pooled</em> objects.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">extract</span>(pool, <span class="dt">w=</span><span class="dv">10</span>, <span class="dt">index=</span><span class="st">&quot;osd&quot;</span>)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="co">## Selected index: 'osd'</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">## 4 window size(s) available in 'smw': 10, 20, 30, 40</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co">## Window size selected: 10</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="co">## [1] 0.03725548</span></a></code></pre></div>
+</div>
+<div id="plot" class="section level3">
+<h3><code>plot</code></h3>
+<p>The <code>smw</code> object has a generic <code>plot</code> method, <code>plot.smw</code>. This command is a convenience wrapper for accessing and viewing the results cointained in a <code>smw</code> object. Auxiliary arguments from <code>extract</code> (i.e. <code>sig</code>, <code>z</code>, <code>BPs</code> and <code>seq.sig</code>) can be passed to <code>plot.smw</code>. The function returns invisibly a DP table (object class <code>dp</code>) and plots the location of the window midpoints vs. dissimilarity values. By default, significant dissimilarity values are given in “red” and the breakpoints in “blue”.</p>
+<p>The background area of the graph can be coloured according to the breakpoints location (argument <code>bg</code>). These colors are controled by the arguments <code>bg</code> and <code>bg_alpha</code>. The colors generated for each sample can be acessed through the command <code>bgDP(dp)</code> (where <code>dp</code> is an object of class <code>dp</code>). As we shall see later, this vector may be useful in the simultaneous visualization of the results the <code>SMW</code> and <code>pwRDA</code>. For the complete list of graphical parameters, please go to <code>help(plot.smw)</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">cex =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw">plot</span>(pool, <span class="dt">w =</span> <span class="dv">10</span>, <span class="dt">main =</span> <span class="st">&quot;DP from a single window (10)&quot;</span>, <span class="dt">cex.main =</span> <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="kw">plot</span>(pool, <span class="dt">main =</span> <span class="st">&quot;DP from pooled windows (10, 20, 30 and 40)&quot;</span>, <span class="dt">bg =</span> <span class="kw">c</span>(<span class="st">&quot;rainbow&quot;</span>), </a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">    <span class="dt">cex.main =</span> <span class="fl">0.8</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>A second type of plot is available for <em>pooled</em> <code>smw</code> objects: the window size effect. When the <code>smw</code> object is <em>pooled</em> and the argument <code>w.effect</code> is <code>TRUE</code>, the <code>plot</code> method drawns together the profiles obtained from the different window sizes.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">plot</span>(pool, <span class="dt">w.effect =</span> <span class="ot">TRUE</span>, <span class="dt">main=</span><span class="st">&quot;Window size effect&quot;</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+</div>
+<div id="piecewise-redundancy-analysis-pwrda" class="section level1">
+<h1>Piecewise redundancy analysis (pwRDA)</h1>
+<p>Once the breakpoints have been defined and their significance tested, the pwRDA can be implemented. It is done with the function <code>pwRDA</code>. The function has three arguments: <code>x</code> explanatory variables, <code>y</code> response variables and <code>BPs</code> the positions of the breakpoints. The function displays a message with the main result of the analysis:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">pw.sim&lt;-<span class="kw">pwRDA</span>(<span class="dt">x.ord=</span>xo,<span class="dt">y.ord=</span>yo, <span class="dt">BPs=</span><span class="kw">bp</span>(pool_dp))</a></code></pre></div>
+<p>The function returns an invisible list with following descriptors:</p>
+<ul>
+<li><code>..$summ</code>: a vector containing the summarized statistics.</li>
+<li><code>..$rda.0</code> and <code>..$rda.pw</code>: the respectives <code>cca</code> objects from the full and “pw”&quot; RDA models. These objects can be used in all functions that applies to <code>vegan::cca.object</code>. More details for accessing and plotting a <code>cca.object</code> are in <code>help(cca.object)</code> and <code>help(plot.cca)</code>, respectivaly.</li>
+</ul>
+<p>The command <code>bgDP</code> applied to the object returned by the fuction <code>plot.smw</code> returns the <code>bg</code> colors for each sample. It can be used for a simultaneous view of the results of the <code>SMW</code> and <code>pwRDA</code> analyses.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">head</span>(pw.sim<span class="op">$</span>summ)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co">##      Statistic      P.value</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co">## FULL 0.6446842 0.0010000000</span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">## PW   0.8240577 0.0000045212</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co">## F    3.1083641 0.0082726695</span></a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">cex =</span> <span class="fl">0.65</span>)</a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="co"># plotting the full rda model:</span></a>
+<a class="sourceLine" id="cb17-8" data-line-number="8"><span class="kw">plot</span>(pw.sim<span class="op">$</span>rda<span class="fl">.0</span>, <span class="dt">main =</span> <span class="st">&quot;full RDA model&quot;</span>, <span class="dt">las =</span> <span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9"><span class="co"># plotting the DP profile and saving the output in an new object</span></a>
+<a class="sourceLine" id="cb17-10" data-line-number="10">dp &lt;-<span class="st"> </span><span class="kw">plot</span>(pool, <span class="dt">main =</span> <span class="st">&quot;DP from pooled windows </span><span class="ch">\n</span><span class="st"> (10, 20, 30 and 40)&quot;</span>, </a>
+<a class="sourceLine" id="cb17-11" data-line-number="11">    <span class="dt">bg =</span> <span class="kw">c</span>(<span class="st">&quot;gold2&quot;</span>, <span class="st">&quot;firebrick1&quot;</span>), <span class="dt">cex.main =</span> <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb17-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb17-13" data-line-number="13"><span class="co"># plotting the pwRDA colored according to the breakpoints:</span></a>
+<a class="sourceLine" id="cb17-14" data-line-number="14"><span class="kw">plot</span>(pw.sim<span class="op">$</span>rda.pw, <span class="dt">type =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">scaling =</span> <span class="dv">3</span>, <span class="dt">main =</span> <span class="st">&quot;pwRDA model&quot;</span>)</a>
+<a class="sourceLine" id="cb17-15" data-line-number="15"><span class="kw">points</span>(pw.sim<span class="op">$</span>rda.pw, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="kw">bgDP</span>(dp), <span class="dt">cex =</span> <span class="fl">1.2</span>)</a>
+<a class="sourceLine" id="cb17-16" data-line-number="16"><span class="kw">text</span>(pw.sim<span class="op">$</span>rda.pw, <span class="dt">display =</span> <span class="st">&quot;bp&quot;</span>, <span class="dt">pch =</span> <span class="dv">16</span>, <span class="dt">col =</span> <span class="st">&quot;steelblue4&quot;</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="running-code-for-the-empirical-dataset-nema." class="section level1">
+<h1>Running code for the empirical dataset <code>nema</code>.</h1>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">  <span class="kw">data</span>(nema)</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="co"># 1 - Data ordering  </span></a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">nemao&lt;-<span class="kw">OrdData</span>(nema<span class="op">$</span>envi,nema<span class="op">$</span>comm, <span class="dt">method=</span><span class="st">&quot;hell&quot;</span>)</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="co">#2 - SMW analysis</span></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6">nemapool&lt;-<span class="kw">SMW</span>(<span class="dt">yo=</span>nemao<span class="op">$</span>yo,<span class="dt">ws=</span><span class="kw">c</span>(<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">30</span>,<span class="dv">40</span>,<span class="dv">50</span>,<span class="dv">60</span>,<span class="dv">70</span>))</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"><span class="kw">plot</span>(nemapool)</a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">nema_bp&lt;-<span class="kw">bp</span>(<span class="kw">extract</span>(nemapool))</a>
+<a class="sourceLine" id="cb18-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb18-10" data-line-number="10"><span class="co">#3 - pwRDA analysis</span></a>
+<a class="sourceLine" id="cb18-11" data-line-number="11">nemapw&lt;-<span class="kw">pwRDA</span>(nemao<span class="op">$</span>xo,<span class="kw">decostand</span>(nemao<span class="op">$</span>yo,<span class="st">&quot;hell&quot;</span>),<span class="dt">BPs=</span>nema_bp)</a></code></pre></div>
+</div>
+<div id="literature" class="section level1">
+<h1>Literature</h1>
+<ol style="list-style-type: decimal">
+<li><p>Burrough, P.A. (1986). Principles of Geographical Information Systems for Land Resources Assessment. Journal of Quaternary Sciencee, 193.</p></li>
+<li><p>Cornelius, J.M. &amp; Reynolds, J.F. (1991). On Determining the Statistical Significance of Discontinuities with Ordered Ecological Data. Ecology, 72, 2057–2070.</p></li>
+<li><p>Erdos, L., Bátori, Z., Tölgyesi, C.S. &amp; Körmöczi, L. (2014). The moving split window (MSW) analysis in vegetation science - An overview. Applied Ecology and Environmental Research, 12, 787–805.</p></li>
+<li><p>Körmöczi, L., Bátori, Z., Erdős, L., Tölgyesi, C., Zalatnai, M. &amp; Varró, C. (2016). The role of randomization tests in vegetation boundary detection with moving split-window analysis. Journal of Vegetation Science, 27, 1288–1296.</p></li>
+<li><p>Oksanen, J., Blanchet, F.G., Friendly, M., Kindt, R., Legendre, P., McGlinn, D., Minchin, P.R., O’Hara, R.B., Simpson, G.L., Solymos, P., Stevens, M.H.H., Szoecs, E. &amp; Wagner, H. (2017). vegan: Community Ecology Package.</p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
